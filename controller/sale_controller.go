@@ -24,6 +24,11 @@ func (c *SaleController) CreateSale(ctx echo.Context) error {
         return ctx.JSON(http.StatusBadRequest, map[string]string{"error": err.Error()})
     }
 
+    // Validação para garantir que o campo "product" não está vazio
+    if sale.Product == "" {
+        return ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Product field is required and cannot be empty"})
+    }
+
     if err := c.service.CreateSale(ctx.Request().Context(), sale); err != nil {
         return ctx.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert sale"})
     }
