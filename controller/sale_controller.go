@@ -39,9 +39,15 @@ func (c *SaleController) UpdateSale(ctx echo.Context) error {
         return ctx.JSON(http.StatusBadRequest, echo.Map{"error": err.Error()})
     }
 
+    // Garantir que o campo `product` não seja alterado
+    updatedSale.Product = oldProductID
+
     // Service method to handle the update
     err := c.service.UpdateSale(ctx.Request().Context(), oldProductID, updatedSale)
     if err != nil {
+        if err == mongo.ErrNoDocuments {
+            return ctx.JSON(http.StatusNotFound, echo.Map{"error": "Sale not found"})
+        }
         return ctx.JSON(http.StatusInternalServerError, echo.Map{"error": err.Error()})
     }
 

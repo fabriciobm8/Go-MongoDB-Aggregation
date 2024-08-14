@@ -1,5 +1,6 @@
 # Go-MongoDB-Aggregation
-Projeto REST desenvolvido em Go com banco de dados MongoDB rodando em um conteiner Docker
+Projeto REST desenvolvido em Go com banco de dados MongoDB rodando em um conteiner Docker<br>
+CRUD com os atributos product, category, amount e date onde tambem fazemos get agrupado por category e por período.
 
 ### Atualização Go:
 1) Rodar no terminal o seguinte comando, para fazer atualizar e baixar bibliotecas necessárias:<br>
