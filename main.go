@@ -2,9 +2,11 @@ package main
 
 import (
     "context"
+    "log"
     "time"
     "go.mongodb.org/mongo-driver/mongo"
     "go.mongodb.org/mongo-driver/mongo/options"
+    "go.mongodb.org/mongo-driver/bson"
     "github.com/labstack/echo/v4"
     "go-mongodb-aggregation/controller"
     "go-mongodb-aggregation/repository"
@@ -23,6 +25,18 @@ func main() {
     defer client.Disconnect(ctx)
 
     collection := client.Database("sales_db").Collection("sales")
+    
+    // Cria um índice único no campo "product"
+    indexModel := mongo.IndexModel{
+        Keys:    bson.D{{Key: "product", Value: 1}}, // Campo que será único
+        Options: options.Index().SetUnique(true),     // Define o índice como único
+    }
+
+    _, err = collection.Indexes().CreateOne(ctx, indexModel)
+    if err != nil {
+        log.Fatal(err)
+    }
+    
     saleRepo := repository.NewSaleRepository(collection)
     saleService := service.NewSaleService(saleRepo)
     saleController := controller.NewSaleController(saleService)
